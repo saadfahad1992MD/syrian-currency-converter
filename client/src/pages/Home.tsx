@@ -2,22 +2,23 @@
  * Syrian Currency Converter - Home Page
  * Design: Elegant Modern with emerald green and gold accents
  * Features: Convert old Syrian pounds to new (100:1 ratio)
+ * Now includes Arabic words display for conversion results
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { 
   ArrowDownUp, 
-  Info, 
   Calculator, 
   Banknote,
   Clock,
   CheckCircle2,
   HelpCircle
 } from "lucide-react";
+import { numberToSimpleArabicWords } from "@/lib/numberToArabicWords";
 
 // Conversion rate: 100 old = 1 new
 const CONVERSION_RATE = 100;
@@ -54,7 +55,6 @@ export default function Home() {
 
   // Handle input change
   const handleOldAmountChange = (value: string) => {
-    // Remove non-numeric characters except decimal
     const cleanValue = value.replace(/[^\d.]/g, "");
     setOldAmount(cleanValue);
     if (direction === "old-to-new") {
@@ -94,6 +94,17 @@ export default function Home() {
       setNewAmount(amount.toString());
       convertNewToOld(amount.toString());
     }
+  };
+
+  // Get numeric values for Arabic words
+  const getOldNumericValue = () => {
+    if (!oldAmount) return 0;
+    return Number(oldAmount.replace(/,/g, "")) || 0;
+  };
+
+  const getNewNumericValue = () => {
+    if (!newAmount) return 0;
+    return Number(newAmount.replace(/,/g, "")) || 0;
   };
 
   return (
@@ -285,17 +296,19 @@ export default function Home() {
                   </motion.div>
                 </div>
 
-                {/* Result Display */}
+                {/* Result Display with Arabic Words */}
                 <AnimatePresence mode="wait">
                   {(oldAmount || newAmount) && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
-                      className="mt-8 p-4 bg-gradient-to-r from-emerald-50 to-amber-50 rounded-xl border border-emerald-100"
+                      className="mt-8 p-6 bg-gradient-to-r from-emerald-50 to-amber-50 rounded-xl border border-emerald-100"
                     >
-                      <div className="text-center">
-                        <p className="text-sm text-muted-foreground mb-2">نتيجة التحويل</p>
+                      <div className="text-center space-y-4">
+                        <p className="text-sm text-muted-foreground">نتيجة التحويل</p>
+                        
+                        {/* Numeric Result */}
                         <div className="flex items-center justify-center gap-4 flex-wrap">
                           <div className="text-center">
                             <p className="text-2xl md:text-3xl font-bold text-amber-600">
@@ -309,6 +322,34 @@ export default function Home() {
                               {newAmount || "٠"} 
                               <span className="text-lg mr-1">ل.س جديدة</span>
                             </p>
+                          </div>
+                        </div>
+
+                        {/* Arabic Words Result */}
+                        <div className="pt-4 border-t border-emerald-200/50">
+                          <p className="text-sm text-muted-foreground mb-2">بالكلمات</p>
+                          <div className="space-y-2">
+                            {getOldNumericValue() > 0 && (
+                              <motion.p 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="text-lg font-semibold text-amber-700 bg-amber-50 rounded-lg py-2 px-4 inline-block"
+                              >
+                                {numberToSimpleArabicWords(getOldNumericValue())} ليرة قديمة
+                              </motion.p>
+                            )}
+                            {getOldNumericValue() > 0 && getNewNumericValue() > 0 && (
+                              <p className="text-muted-foreground">=</p>
+                            )}
+                            {getNewNumericValue() > 0 && (
+                              <motion.p 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="text-lg font-semibold text-emerald-700 bg-emerald-50 rounded-lg py-2 px-4 inline-block"
+                              >
+                                {numberToSimpleArabicWords(getNewNumericValue())} ليرة جديدة
+                              </motion.p>
+                            )}
                           </div>
                         </div>
                       </div>
