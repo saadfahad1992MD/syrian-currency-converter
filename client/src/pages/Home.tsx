@@ -2,7 +2,7 @@
  * Syrian Currency Converter - Home Page
  * Design: Elegant Modern with emerald green and gold accents
  * Features: Convert old Syrian pounds to new (100:1 ratio)
- * Now includes Arabic words display for conversion results
+ * Now includes Arabic words display and tab-based direction switching
  */
 
 import { useState, useCallback } from "react";
@@ -11,12 +11,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { 
-  ArrowDownUp, 
   Calculator, 
   Banknote,
   Clock,
   CheckCircle2,
-  HelpCircle
+  HelpCircle,
+  ArrowRight,
+  ArrowLeft
 } from "lucide-react";
 import { numberToSimpleArabicWords } from "@/lib/numberToArabicWords";
 
@@ -53,7 +54,7 @@ export default function Home() {
     setOldAmount(result.toLocaleString("ar-SY", { maximumFractionDigits: 0 }));
   }, []);
 
-  // Handle input change
+  // Handle input change for old amount
   const handleOldAmountChange = (value: string) => {
     const cleanValue = value.replace(/[^\d.]/g, "");
     setOldAmount(cleanValue);
@@ -66,6 +67,7 @@ export default function Home() {
     }
   };
 
+  // Handle input change for new amount
   const handleNewAmountChange = (value: string) => {
     const cleanValue = value.replace(/[^\d.]/g, "");
     setNewAmount(cleanValue);
@@ -78,11 +80,13 @@ export default function Home() {
     }
   };
 
-  // Toggle direction
-  const toggleDirection = () => {
-    setDirection(prev => prev === "old-to-new" ? "new-to-old" : "old-to-new");
-    setOldAmount("");
-    setNewAmount("");
+  // Set direction
+  const setConversionDirection = (newDirection: "old-to-new" | "new-to-old") => {
+    if (newDirection !== direction) {
+      setDirection(newDirection);
+      setOldAmount("");
+      setNewAmount("");
+    }
   };
 
   // Quick amount buttons
@@ -96,15 +100,27 @@ export default function Home() {
     }
   };
 
+  // Convert Arabic numerals to Western numerals
+  const arabicToWestern = (str: string): string => {
+    const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    let result = str;
+    arabicNumerals.forEach((arabic, index) => {
+      result = result.replace(new RegExp(arabic, 'g'), index.toString());
+    });
+    return result;
+  };
+
   // Get numeric values for Arabic words
   const getOldNumericValue = () => {
     if (!oldAmount) return 0;
-    return Number(oldAmount.replace(/,/g, "")) || 0;
+    const cleaned = arabicToWestern(oldAmount.replace(/[,٬]/g, ""));
+    return Number(cleaned) || 0;
   };
 
   const getNewNumericValue = () => {
     if (!newAmount) return 0;
-    return Number(newAmount.replace(/,/g, "")) || 0;
+    const cleaned = arabicToWestern(newAmount.replace(/[,٬]/g, ""));
+    return Number(cleaned) || 0;
   };
 
   return (
@@ -165,136 +181,281 @@ export default function Home() {
           >
             <Card className="glass shadow-2xl border-0 overflow-hidden">
               <div className="p-6 md:p-8">
-                {/* Direction Indicator */}
-                <div className="text-center mb-6">
-                  <span className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-secondary/50 rounded-full px-4 py-2">
-                    <Calculator className="w-4 h-4" />
-                    {direction === "old-to-new" 
-                      ? "تحويل من القديمة إلى الجديدة" 
-                      : "تحويل من الجديدة إلى القديمة"}
-                  </span>
-                </div>
-
-                {/* Converter Grid */}
-                <div className="grid md:grid-cols-[1fr,auto,1fr] gap-6 items-center">
-                  {/* Old Currency Input */}
-                  <motion.div 
-                    className={`space-y-3 ${direction === "new-to-old" ? "md:order-3" : ""}`}
-                    layout
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center overflow-hidden">
-                        <img 
-                          src="/images/old-currency.png" 
-                          alt="العملة القديمة" 
-                          className="w-10 h-10 object-cover"
-                        />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground">الليرة القديمة</h3>
-                        <p className="text-xs text-muted-foreground">قبل ١ يناير ٢٠٢٦</p>
-                      </div>
-                    </div>
-                    
-                    <div className="relative">
-                      <Input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="أدخل المبلغ"
-                        value={oldAmount}
-                        onChange={(e) => handleOldAmountChange(e.target.value)}
-                        disabled={direction === "new-to-old"}
-                        className="text-2xl md:text-3xl h-16 text-center font-bold bg-white border-2 border-amber-200 focus:border-amber-400 transition-colors disabled:opacity-50"
-                        dir="ltr"
-                      />
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-600 font-medium">
-                        ل.س
-                      </span>
-                    </div>
-
-                    {/* Quick amounts for old currency */}
-                    {direction === "old-to-new" && (
-                      <div className="flex flex-wrap gap-2">
-                        {OLD_DENOMINATIONS.map((amount) => (
-                          <Button
-                            key={amount}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleQuickAmount(amount)}
-                            className="text-xs border-amber-200 hover:bg-amber-50 hover:border-amber-300"
-                          >
-                            {amount.toLocaleString("ar-SY")}
-                          </Button>
-                        ))}
-                      </div>
-                    )}
-                  </motion.div>
-
-                  {/* Swap Button */}
-                  <div className="flex justify-center md:order-2">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={toggleDirection}
-                      className="w-14 h-14 rounded-full border-2 border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300 group"
+                {/* Direction Tabs - Two Icons at Top */}
+                <div className="flex justify-center mb-8">
+                  <div className="inline-flex bg-secondary/30 rounded-2xl p-1.5 gap-2">
+                    {/* Old to New Tab */}
+                    <button
+                      onClick={() => setConversionDirection("old-to-new")}
+                      className={`
+                        relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300
+                        ${direction === "old-to-new" 
+                          ? "bg-white shadow-lg text-foreground" 
+                          : "text-muted-foreground hover:text-foreground hover:bg-white/50"
+                        }
+                      `}
                     >
-                      <ArrowDownUp className="w-6 h-6 text-primary group-hover:rotate-180 transition-transform duration-500" />
-                    </Button>
-                  </div>
-
-                  {/* New Currency Input */}
-                  <motion.div 
-                    className={`space-y-3 ${direction === "new-to-old" ? "md:order-1" : ""}`}
-                    layout
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center overflow-hidden">
-                        <img 
-                          src="/images/new-currency.png" 
-                          alt="العملة الجديدة" 
-                          className="w-10 h-10 object-cover"
+                      <div className="flex items-center gap-2">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-amber-100" : "bg-amber-50"}`}>
+                          <img 
+                            src="/images/old-currency.png" 
+                            alt="قديمة" 
+                            className="w-6 h-6 object-cover"
+                          />
+                        </div>
+                        <ArrowLeft className={`w-4 h-4 ${direction === "old-to-new" ? "text-primary" : "text-muted-foreground"}`} />
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-emerald-100" : "bg-emerald-50"}`}>
+                          <img 
+                            src="/images/new-currency.png" 
+                            alt="جديدة" 
+                            className="w-6 h-6 object-cover"
+                          />
+                        </div>
+                      </div>
+                      <span className="text-sm font-medium hidden sm:block">قديمة ← جديدة</span>
+                      {direction === "old-to-new" && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute inset-0 bg-white rounded-xl shadow-lg -z-10"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                         />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground">الليرة الجديدة</h3>
-                        <p className="text-xs text-muted-foreground">بعد ١ يناير ٢٠٢٦</p>
-                      </div>
-                    </div>
-                    
-                    <div className="relative">
-                      <Input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="أدخل المبلغ"
-                        value={newAmount}
-                        onChange={(e) => handleNewAmountChange(e.target.value)}
-                        disabled={direction === "old-to-new"}
-                        className="text-2xl md:text-3xl h-16 text-center font-bold bg-white border-2 border-emerald-200 focus:border-emerald-400 transition-colors disabled:opacity-50"
-                        dir="ltr"
-                      />
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600 font-medium">
-                        ل.س
-                      </span>
-                    </div>
+                      )}
+                    </button>
 
-                    {/* Quick amounts for new currency */}
-                    {direction === "new-to-old" && (
-                      <div className="flex flex-wrap gap-2">
-                        {NEW_DENOMINATIONS.map((amount) => (
-                          <Button
-                            key={amount}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleQuickAmount(amount)}
-                            className="text-xs border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300"
-                          >
-                            {amount.toLocaleString("ar-SY")}
-                          </Button>
-                        ))}
+                    {/* New to Old Tab */}
+                    <button
+                      onClick={() => setConversionDirection("new-to-old")}
+                      className={`
+                        relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300
+                        ${direction === "new-to-old" 
+                          ? "bg-white shadow-lg text-foreground" 
+                          : "text-muted-foreground hover:text-foreground hover:bg-white/50"
+                        }
+                      `}
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-emerald-100" : "bg-emerald-50"}`}>
+                          <img 
+                            src="/images/new-currency.png" 
+                            alt="جديدة" 
+                            className="w-6 h-6 object-cover"
+                          />
+                        </div>
+                        <ArrowLeft className={`w-4 h-4 ${direction === "new-to-old" ? "text-primary" : "text-muted-foreground"}`} />
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-amber-100" : "bg-amber-50"}`}>
+                          <img 
+                            src="/images/old-currency.png" 
+                            alt="قديمة" 
+                            className="w-6 h-6 object-cover"
+                          />
+                        </div>
                       </div>
-                    )}
-                  </motion.div>
+                      <span className="text-sm font-medium hidden sm:block">جديدة ← قديمة</span>
+                      {direction === "new-to-old" && (
+                        <motion.div
+                          layoutId="activeTab"
+                          className="absolute inset-0 bg-white rounded-xl shadow-lg -z-10"
+                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        />
+                      )}
+                    </button>
+                  </div>
                 </div>
+
+                {/* Converter Content */}
+                <AnimatePresence mode="wait">
+                  {direction === "old-to-new" ? (
+                    <motion.div
+                      key="old-to-new"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.3 }}
+                      className="space-y-6"
+                    >
+                      {/* From: Old Currency */}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center overflow-hidden">
+                            <img 
+                              src="/images/old-currency.png" 
+                              alt="العملة القديمة" 
+                              className="w-10 h-10 object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-foreground">من: الليرة القديمة</h3>
+                            <p className="text-xs text-muted-foreground">قبل ١ يناير ٢٠٢٦</p>
+                          </div>
+                        </div>
+                        
+                        <div className="relative">
+                          <Input
+                            type="text"
+                            inputMode="decimal"
+                            placeholder="أدخل المبلغ بالليرة القديمة"
+                            value={oldAmount}
+                            onChange={(e) => handleOldAmountChange(e.target.value)}
+                            className="text-2xl md:text-3xl h-16 text-center font-bold bg-white border-2 border-amber-200 focus:border-amber-400 transition-colors"
+                            dir="ltr"
+                          />
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-600 font-medium">
+                            ل.س
+                          </span>
+                        </div>
+
+                        {/* Quick amounts */}
+                        <div className="flex flex-wrap gap-2 justify-center">
+                          {OLD_DENOMINATIONS.map((amount) => (
+                            <Button
+                              key={amount}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleQuickAmount(amount)}
+                              className="text-xs border-amber-200 hover:bg-amber-50 hover:border-amber-300"
+                            >
+                              {amount.toLocaleString("ar-SY")}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Arrow Divider */}
+                      <div className="flex justify-center">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-100 to-emerald-100 flex items-center justify-center">
+                          <ArrowLeft className="w-6 h-6 text-primary" />
+                        </div>
+                      </div>
+
+                      {/* To: New Currency */}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center overflow-hidden">
+                            <img 
+                              src="/images/new-currency.png" 
+                              alt="العملة الجديدة" 
+                              className="w-10 h-10 object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-foreground">إلى: الليرة الجديدة</h3>
+                            <p className="text-xs text-muted-foreground">بعد ١ يناير ٢٠٢٦</p>
+                          </div>
+                        </div>
+                        
+                        <div className="relative">
+                          <Input
+                            type="text"
+                            inputMode="decimal"
+                            placeholder="النتيجة"
+                            value={newAmount}
+                            readOnly
+                            className="text-2xl md:text-3xl h-16 text-center font-bold bg-emerald-50 border-2 border-emerald-200 text-emerald-700"
+                            dir="ltr"
+                          />
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600 font-medium">
+                            ل.س
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="new-to-old"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="space-y-6"
+                    >
+                      {/* From: New Currency */}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center overflow-hidden">
+                            <img 
+                              src="/images/new-currency.png" 
+                              alt="العملة الجديدة" 
+                              className="w-10 h-10 object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-foreground">من: الليرة الجديدة</h3>
+                            <p className="text-xs text-muted-foreground">بعد ١ يناير ٢٠٢٦</p>
+                          </div>
+                        </div>
+                        
+                        <div className="relative">
+                          <Input
+                            type="text"
+                            inputMode="decimal"
+                            placeholder="أدخل المبلغ بالليرة الجديدة"
+                            value={newAmount}
+                            onChange={(e) => handleNewAmountChange(e.target.value)}
+                            className="text-2xl md:text-3xl h-16 text-center font-bold bg-white border-2 border-emerald-200 focus:border-emerald-400 transition-colors"
+                            dir="ltr"
+                          />
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600 font-medium">
+                            ل.س
+                          </span>
+                        </div>
+
+                        {/* Quick amounts */}
+                        <div className="flex flex-wrap gap-2 justify-center">
+                          {NEW_DENOMINATIONS.map((amount) => (
+                            <Button
+                              key={amount}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleQuickAmount(amount)}
+                              className="text-xs border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300"
+                            >
+                              {amount.toLocaleString("ar-SY")}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Arrow Divider */}
+                      <div className="flex justify-center">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-100 to-amber-100 flex items-center justify-center">
+                          <ArrowLeft className="w-6 h-6 text-primary" />
+                        </div>
+                      </div>
+
+                      {/* To: Old Currency */}
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center overflow-hidden">
+                            <img 
+                              src="/images/old-currency.png" 
+                              alt="العملة القديمة" 
+                              className="w-10 h-10 object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-foreground">إلى: الليرة القديمة</h3>
+                            <p className="text-xs text-muted-foreground">قبل ١ يناير ٢٠٢٦</p>
+                          </div>
+                        </div>
+                        
+                        <div className="relative">
+                          <Input
+                            type="text"
+                            inputMode="decimal"
+                            placeholder="النتيجة"
+                            value={oldAmount}
+                            readOnly
+                            className="text-2xl md:text-3xl h-16 text-center font-bold bg-amber-50 border-2 border-amber-200 text-amber-700"
+                            dir="ltr"
+                          />
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-600 font-medium">
+                            ل.س
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {/* Result Display with Arabic Words */}
                 <AnimatePresence mode="wait">
