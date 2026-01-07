@@ -212,7 +212,7 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-medium hidden sm:block">قديمة ← جديدة</span>
+                      <span className="text-sm font-medium">قديمة ← جديدة</span>
                       {direction === "old-to-new" && (
                         <motion.div
                           layoutId="activeTab"
@@ -250,7 +250,7 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-medium hidden sm:block">جديدة ← قديمة</span>
+                      <span className="text-sm font-medium">جديدة ← قديمة</span>
                       {direction === "new-to-old" && (
                         <motion.div
                           layoutId="activeTab"
