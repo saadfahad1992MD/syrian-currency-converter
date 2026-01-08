@@ -33,25 +33,26 @@ export default function Home() {
   const [newAmount, setNewAmount] = useState<string>("");
   const [direction, setDirection] = useState<"old-to-new" | "new-to-old">("old-to-new");
   const [isConverting, setIsConverting] = useState(false);
+  const [useArabicNumerals, setUseArabicNumerals] = useState(true);
 
   // Convert old to new
-  const convertOldToNew = useCallback((value: string) => {
+  const convertOldToNew = useCallback((value: string, useArabic: boolean) => {
     if (!value || isNaN(Number(value))) {
       setNewAmount("");
       return;
     }
     const result = Number(value) / CONVERSION_RATE;
-    setNewAmount(result.toLocaleString("ar-SY", { maximumFractionDigits: 2 }));
+    setNewAmount(formatNumber(result, useArabic, 2));
   }, []);
 
   // Convert new to old
-  const convertNewToOld = useCallback((value: string) => {
+  const convertNewToOld = useCallback((value: string, useArabic: boolean) => {
     if (!value || isNaN(Number(value))) {
       setOldAmount("");
       return;
     }
     const result = Number(value) * CONVERSION_RATE;
-    setOldAmount(result.toLocaleString("ar-SY", { maximumFractionDigits: 0 }));
+    setOldAmount(formatNumber(result, useArabic, 0));
   }, []);
 
   // Convert Arabic numerals to English
@@ -64,8 +65,38 @@ export default function Home() {
     return result;
   };
 
+  // Convert English numerals to Arabic
+  const englishToArabic = (str: string): string => {
+    const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    let result = str;
+    for (let i = 0; i <= 9; i++) {
+      result = result.replace(new RegExp(i.toString(), 'g'), arabicNumerals[i]);
+    }
+    return result;
+  };
+
+  // Check if string contains Arabic numerals
+  const hasArabicNumerals = (str: string): boolean => {
+    const arabicNumerals = /[٠-٩]/;
+    return arabicNumerals.test(str);
+  };
+
+  // Format number based on numeral preference
+  const formatNumber = (num: number, useArabic: boolean, fractionDigits: number = 0): string => {
+    const formatted = num.toLocaleString('en-US', { maximumFractionDigits: fractionDigits });
+    if (useArabic) {
+      return englishToArabic(formatted.replace(/,/g, '٬'));
+    }
+    return formatted;
+  };
+
   // Handle input change for old amount
   const handleOldAmountChange = (value: string) => {
+    // Check if input contains Arabic numerals
+    const isArabic = hasArabicNumerals(value);
+    if (value.length > 0) {
+      setUseArabicNumerals(isArabic);
+    }
     // Convert Arabic numerals to English first
     const englishValue = arabicToEnglish(value);
     const cleanValue = englishValue.replace(/[^\d.]/g, "");
@@ -73,7 +104,7 @@ export default function Home() {
     if (direction === "old-to-new") {
       setIsConverting(true);
       setTimeout(() => {
-        convertOldToNew(cleanValue);
+        convertOldToNew(cleanValue, isArabic || (value.length === 0 && useArabicNumerals));
         setIsConverting(false);
       }, 150);
     }
@@ -81,6 +112,11 @@ export default function Home() {
 
   // Handle input change for new amount
   const handleNewAmountChange = (value: string) => {
+    // Check if input contains Arabic numerals
+    const isArabic = hasArabicNumerals(value);
+    if (value.length > 0) {
+      setUseArabicNumerals(isArabic);
+    }
     // Convert Arabic numerals to English first
     const englishValue = arabicToEnglish(value);
     const cleanValue = englishValue.replace(/[^\d.]/g, "");
@@ -88,7 +124,7 @@ export default function Home() {
     if (direction === "new-to-old") {
       setIsConverting(true);
       setTimeout(() => {
-        convertNewToOld(cleanValue);
+        convertNewToOld(cleanValue, isArabic || (value.length === 0 && useArabicNumerals));
         setIsConverting(false);
       }, 150);
     }
@@ -107,10 +143,10 @@ export default function Home() {
   const handleQuickAmount = (amount: number) => {
     if (direction === "old-to-new") {
       setOldAmount(amount.toString());
-      convertOldToNew(amount.toString());
+      convertOldToNew(amount.toString(), useArabicNumerals);
     } else {
       setNewAmount(amount.toString());
-      convertNewToOld(amount.toString());
+      convertNewToOld(amount.toString(), useArabicNumerals);
     }
   };
 
@@ -177,9 +213,13 @@ export default function Home() {
           <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto drop-shadow">
             حوّل بين الليرة السورية القديمة والجديدة بسهولة
           </p>
-          <div className="mt-4 inline-flex items-center gap-2 bg-white/30 backdrop-blur-md rounded-full px-4 sm:px-6 py-2 sm:py-3 text-white border border-white/30 shadow-lg">
-            <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" />
-            <span className="text-sm sm:text-base font-medium whitespace-nowrap">١٠٠ ليرة قديمة = ١ ليرة جديدة</span>
+          <div className="mt-6 flex flex-col items-center gap-2">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl px-6 py-4 shadow-xl border-2 border-emerald-400">
+              <div className="flex items-center justify-center gap-3">
+                <CheckCircle2 className="w-6 h-6 text-emerald-500 shrink-0" />
+                <span className="text-base sm:text-lg font-bold text-emerald-700">١٠٠ ليرة قديمة = ١ ليرة جديدة</span>
+              </div>
+            </div>
           </div>
         </motion.div>
       </section>
@@ -601,9 +641,7 @@ export default function Home() {
                   </motion.div>
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground mt-4 text-center">
-                * فئة ١٠٠٠ ليرة ستُطرح في المرحلة الثانية
-              </p>
+
             </Card>
           </motion.div>
 
@@ -650,9 +688,7 @@ export default function Home() {
           <p className="text-sm text-muted-foreground">
             هذا الموقع للأغراض التعليمية والتوعوية فقط
           </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            المصدر: مصرف سوريا المركزي - يناير ٢٠٢٦
-          </p>
+
         </div>
       </footer>
     </div>
