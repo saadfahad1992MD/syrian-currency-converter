@@ -460,14 +460,14 @@ export default function Home() {
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                           <div className="text-center">
                             <p className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-600">
-                              {oldAmount ? Number(oldAmount.replace(/,/g, "")).toLocaleString("ar-SY") : "٠"} 
+                              {oldAmount ? Number(oldAmount.replace(/,/g, "")).toLocaleString("en-US") : "0"} 
                               <span className="text-sm sm:text-lg mr-1">ل.س قديمة</span>
                             </p>
                           </div>
                           <span className="text-xl sm:text-2xl text-muted-foreground">=</span>
                           <div className="text-center">
                             <p className="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-600">
-                              {newAmount || "٠"} 
+                              {newAmount || "0"} 
                               <span className="text-sm sm:text-lg mr-1">ل.س جديدة</span>
                             </p>
                           </div>
