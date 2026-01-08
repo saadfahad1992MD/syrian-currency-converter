@@ -213,13 +213,9 @@ export default function Home() {
           <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto drop-shadow">
             حوّل بين الليرة السورية القديمة والجديدة بسهولة
           </p>
-          <div className="mt-6 flex flex-col items-center gap-2">
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl px-6 py-4 shadow-xl border-2 border-emerald-400">
-              <div className="flex items-center justify-center gap-3">
-                <CheckCircle2 className="w-6 h-6 text-emerald-500 shrink-0" />
-                <span className="text-base sm:text-lg font-bold text-emerald-700">١٠٠ ليرة قديمة = ١ ليرة جديدة</span>
-              </div>
-            </div>
+          <div className="mt-4 inline-flex items-center gap-2 bg-white/30 backdrop-blur-md rounded-full px-4 sm:px-6 py-2 sm:py-3 text-white border border-white/30 shadow-lg">
+            <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" />
+            <span className="text-sm sm:text-base font-medium">١٠٠ ليرة قديمة = ١ ليرة جديدة</span>
           </div>
         </motion.div>
       </section>
@@ -333,12 +329,12 @@ export default function Home() {
                         <div className="relative">
                           <Input
                             type="text"
-                            inputMode="decimal"
+                            inputMode="text"
                             placeholder="أدخل المبلغ"
                             value={oldAmount}
                             onChange={(e) => handleOldAmountChange(e.target.value)}
                             className="text-xl sm:text-2xl md:text-3xl h-14 sm:h-16 text-center font-bold bg-white border-2 border-amber-200 focus:border-amber-400 transition-colors"
-                            dir="ltr"
+                            dir="rtl"
                           />
                           <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-amber-600 font-medium text-sm sm:text-base">
                             ل.س
@@ -428,12 +424,12 @@ export default function Home() {
                         <div className="relative">
                           <Input
                             type="text"
-                            inputMode="decimal"
+                            inputMode="text"
                             placeholder="أدخل المبلغ"
                             value={newAmount}
                             onChange={(e) => handleNewAmountChange(e.target.value)}
                             className="text-xl sm:text-2xl md:text-3xl h-14 sm:h-16 text-center font-bold bg-white border-2 border-emerald-200 focus:border-emerald-400 transition-colors"
-                            dir="ltr"
+                            dir="rtl"
                           />
                           <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-emerald-600 font-medium text-sm sm:text-base">
                             ل.س
