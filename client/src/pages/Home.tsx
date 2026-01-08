@@ -182,38 +182,38 @@ export default function Home() {
             <Card className="glass shadow-2xl border-0 overflow-hidden">
               <div className="p-6 md:p-8">
                 {/* Direction Tabs - Two Icons at Top */}
-                <div className="flex flex-col items-center mb-8">
+                <div className="flex flex-col items-center mb-6 md:mb-8">
                   <p className="text-sm text-muted-foreground mb-3">اختر نوع التحويل</p>
-                  <div className="inline-flex bg-secondary/30 rounded-2xl p-1.5 gap-2">
+                  <div className="flex flex-col sm:flex-row bg-secondary/30 rounded-2xl p-1.5 gap-2 w-full sm:w-auto">
                     {/* Old to New Tab */}
                     <button
                       onClick={() => setConversionDirection("old-to-new")}
                       className={`
-                        relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300
+                        relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all duration-300 w-full sm:w-auto
                         ${direction === "old-to-new" 
                           ? "bg-white shadow-lg text-foreground" 
                           : "text-muted-foreground hover:text-foreground hover:bg-white/50"
                         }
                       `}
                     >
-                      <div className="flex items-center gap-2">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-amber-100" : "bg-amber-50"}`}>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-amber-100" : "bg-amber-50"}`}>
                           <img 
                             src="/images/old-currency.png" 
                             alt="قديمة" 
-                            className="w-6 h-6 object-cover"
+                            className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
-                        <ArrowLeft className={`w-4 h-4 ${direction === "old-to-new" ? "text-primary" : "text-muted-foreground"}`} />
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-emerald-100" : "bg-emerald-50"}`}>
+                        <ArrowLeft className={`w-4 h-4 shrink-0 ${direction === "old-to-new" ? "text-primary" : "text-muted-foreground"}`} />
+                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-emerald-100" : "bg-emerald-50"}`}>
                           <img 
                             src="/images/new-currency.png" 
                             alt="جديدة" 
-                            className="w-6 h-6 object-cover"
+                            className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-medium">قديمة إلى جديدة</span>
+                      <span className="text-sm font-medium whitespace-nowrap">قديمة إلى جديدة</span>
                       {direction === "old-to-new" && (
                         <motion.div
                           layoutId="activeTab"
@@ -227,31 +227,31 @@ export default function Home() {
                     <button
                       onClick={() => setConversionDirection("new-to-old")}
                       className={`
-                        relative flex items-center gap-3 px-5 py-3 rounded-xl transition-all duration-300
+                        relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all duration-300 w-full sm:w-auto
                         ${direction === "new-to-old" 
                           ? "bg-white shadow-lg text-foreground" 
                           : "text-muted-foreground hover:text-foreground hover:bg-white/50"
                         }
                       `}
                     >
-                      <div className="flex items-center gap-2">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-emerald-100" : "bg-emerald-50"}`}>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-emerald-100" : "bg-emerald-50"}`}>
                           <img 
                             src="/images/new-currency.png" 
                             alt="جديدة" 
-                            className="w-6 h-6 object-cover"
+                            className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
-                        <ArrowLeft className={`w-4 h-4 ${direction === "new-to-old" ? "text-primary" : "text-muted-foreground"}`} />
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-amber-100" : "bg-amber-50"}`}>
+                        <ArrowLeft className={`w-4 h-4 shrink-0 ${direction === "new-to-old" ? "text-primary" : "text-muted-foreground"}`} />
+                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-amber-100" : "bg-amber-50"}`}>
                           <img 
                             src="/images/old-currency.png" 
                             alt="قديمة" 
-                            className="w-6 h-6 object-cover"
+                            className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-medium">جديدة إلى قديمة</span>
+                      <span className="text-sm font-medium whitespace-nowrap">جديدة إلى قديمة</span>
                       {direction === "new-to-old" && (
                         <motion.div
                           layoutId="activeTab"
@@ -277,15 +277,15 @@ export default function Home() {
                       {/* From: Old Currency */}
                       <div className="space-y-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center overflow-hidden">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-100 flex items-center justify-center overflow-hidden shrink-0">
                             <img 
                               src="/images/old-currency.png" 
                               alt="العملة القديمة" 
-                              className="w-10 h-10 object-cover"
+                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover"
                             />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-foreground">من: الليرة القديمة</h3>
+                            <h3 className="font-semibold text-foreground text-sm sm:text-base">من: الليرة القديمة</h3>
                             <p className="text-xs text-muted-foreground">قبل ١ يناير ٢٠٢٦</p>
                           </div>
                         </div>
@@ -294,26 +294,26 @@ export default function Home() {
                           <Input
                             type="text"
                             inputMode="decimal"
-                            placeholder="أدخل المبلغ بالليرة القديمة"
+                            placeholder="أدخل المبلغ"
                             value={oldAmount}
                             onChange={(e) => handleOldAmountChange(e.target.value)}
-                            className="text-2xl md:text-3xl h-16 text-center font-bold bg-white border-2 border-amber-200 focus:border-amber-400 transition-colors"
+                            className="text-xl sm:text-2xl md:text-3xl h-14 sm:h-16 text-center font-bold bg-white border-2 border-amber-200 focus:border-amber-400 transition-colors"
                             dir="ltr"
                           />
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-600 font-medium">
+                          <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-amber-600 font-medium text-sm sm:text-base">
                             ل.س
                           </span>
                         </div>
 
                         {/* Quick amounts */}
-                        <div className="flex flex-wrap gap-2 justify-center">
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
                           {OLD_DENOMINATIONS.map((amount) => (
                             <Button
                               key={amount}
                               variant="outline"
                               size="sm"
                               onClick={() => handleQuickAmount(amount)}
-                              className="text-xs border-amber-200 hover:bg-amber-50 hover:border-amber-300"
+                              className="text-xs border-amber-200 hover:bg-amber-50 hover:border-amber-300 px-2 sm:px-3"
                             >
                               {amount.toLocaleString("ar-SY")}
                             </Button>
@@ -323,23 +323,23 @@ export default function Home() {
 
                       {/* Arrow Divider */}
                       <div className="flex justify-center">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-100 to-emerald-100 flex items-center justify-center">
-                          <ArrowLeft className="w-6 h-6 text-primary" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-amber-100 to-emerald-100 flex items-center justify-center">
+                          <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                         </div>
                       </div>
 
                       {/* To: New Currency */}
                       <div className="space-y-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center overflow-hidden">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-100 flex items-center justify-center overflow-hidden shrink-0">
                             <img 
                               src="/images/new-currency.png" 
                               alt="العملة الجديدة" 
-                              className="w-10 h-10 object-cover"
+                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover"
                             />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-foreground">إلى: الليرة الجديدة</h3>
+                            <h3 className="font-semibold text-foreground text-sm sm:text-base">إلى: الليرة الجديدة</h3>
                             <p className="text-xs text-muted-foreground">بعد ١ يناير ٢٠٢٦</p>
                           </div>
                         </div>
@@ -351,10 +351,10 @@ export default function Home() {
                             placeholder="النتيجة"
                             value={newAmount}
                             readOnly
-                            className="text-2xl md:text-3xl h-16 text-center font-bold bg-emerald-50 border-2 border-emerald-200 text-emerald-700"
+                            className="text-xl sm:text-2xl md:text-3xl h-14 sm:h-16 text-center font-bold bg-emerald-50 border-2 border-emerald-200 text-emerald-700"
                             dir="ltr"
                           />
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600 font-medium">
+                          <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-emerald-600 font-medium text-sm sm:text-base">
                             ل.س
                           </span>
                         </div>
@@ -372,15 +372,15 @@ export default function Home() {
                       {/* From: New Currency */}
                       <div className="space-y-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center overflow-hidden">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-100 flex items-center justify-center overflow-hidden shrink-0">
                             <img 
                               src="/images/new-currency.png" 
                               alt="العملة الجديدة" 
-                              className="w-10 h-10 object-cover"
+                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover"
                             />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-foreground">من: الليرة الجديدة</h3>
+                            <h3 className="font-semibold text-foreground text-sm sm:text-base">من: الليرة الجديدة</h3>
                             <p className="text-xs text-muted-foreground">بعد ١ يناير ٢٠٢٦</p>
                           </div>
                         </div>
@@ -389,26 +389,26 @@ export default function Home() {
                           <Input
                             type="text"
                             inputMode="decimal"
-                            placeholder="أدخل المبلغ بالليرة الجديدة"
+                            placeholder="أدخل المبلغ"
                             value={newAmount}
                             onChange={(e) => handleNewAmountChange(e.target.value)}
-                            className="text-2xl md:text-3xl h-16 text-center font-bold bg-white border-2 border-emerald-200 focus:border-emerald-400 transition-colors"
+                            className="text-xl sm:text-2xl md:text-3xl h-14 sm:h-16 text-center font-bold bg-white border-2 border-emerald-200 focus:border-emerald-400 transition-colors"
                             dir="ltr"
                           />
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600 font-medium">
+                          <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-emerald-600 font-medium text-sm sm:text-base">
                             ل.س
                           </span>
                         </div>
 
                         {/* Quick amounts */}
-                        <div className="flex flex-wrap gap-2 justify-center">
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
                           {NEW_DENOMINATIONS.map((amount) => (
                             <Button
                               key={amount}
                               variant="outline"
                               size="sm"
                               onClick={() => handleQuickAmount(amount)}
-                              className="text-xs border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300"
+                              className="text-xs border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300 px-2 sm:px-3"
                             >
                               {amount.toLocaleString("ar-SY")}
                             </Button>
@@ -418,23 +418,23 @@ export default function Home() {
 
                       {/* Arrow Divider */}
                       <div className="flex justify-center">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-100 to-amber-100 flex items-center justify-center">
-                          <ArrowLeft className="w-6 h-6 text-primary" />
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-emerald-100 to-amber-100 flex items-center justify-center">
+                          <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                         </div>
                       </div>
 
                       {/* To: Old Currency */}
                       <div className="space-y-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center overflow-hidden">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-100 flex items-center justify-center overflow-hidden shrink-0">
                             <img 
                               src="/images/old-currency.png" 
                               alt="العملة القديمة" 
-                              className="w-10 h-10 object-cover"
+                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover"
                             />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-foreground">إلى: الليرة القديمة</h3>
+                            <h3 className="font-semibold text-foreground text-sm sm:text-base">إلى: الليرة القديمة</h3>
                             <p className="text-xs text-muted-foreground">قبل ١ يناير ٢٠٢٦</p>
                           </div>
                         </div>
@@ -446,10 +446,10 @@ export default function Home() {
                             placeholder="النتيجة"
                             value={oldAmount}
                             readOnly
-                            className="text-2xl md:text-3xl h-16 text-center font-bold bg-amber-50 border-2 border-amber-200 text-amber-700"
+                            className="text-xl sm:text-2xl md:text-3xl h-14 sm:h-16 text-center font-bold bg-amber-50 border-2 border-amber-200 text-amber-700"
                             dir="ltr"
                           />
-                          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-amber-600 font-medium">
+                          <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-amber-600 font-medium text-sm sm:text-base">
                             ل.س
                           </span>
                         </div>
@@ -465,37 +465,37 @@ export default function Home() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
-                      className="mt-8 p-6 bg-gradient-to-r from-emerald-50 to-amber-50 rounded-xl border border-emerald-100"
+                      className="mt-6 md:mt-8 p-4 md:p-6 bg-gradient-to-r from-emerald-50 to-amber-50 rounded-xl border border-emerald-100"
                     >
-                      <div className="text-center space-y-4">
+                      <div className="text-center space-y-3 md:space-y-4">
                         <p className="text-sm text-muted-foreground">نتيجة التحويل</p>
                         
                         {/* Numeric Result */}
-                        <div className="flex items-center justify-center gap-4 flex-wrap">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
                           <div className="text-center">
-                            <p className="text-2xl md:text-3xl font-bold text-amber-600">
+                            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-600">
                               {oldAmount ? Number(oldAmount.replace(/,/g, "")).toLocaleString("ar-SY") : "٠"} 
-                              <span className="text-lg mr-1">ل.س قديمة</span>
+                              <span className="text-sm sm:text-lg mr-1">ل.س قديمة</span>
                             </p>
                           </div>
-                          <span className="text-2xl text-muted-foreground">=</span>
+                          <span className="text-xl sm:text-2xl text-muted-foreground">=</span>
                           <div className="text-center">
-                            <p className="text-2xl md:text-3xl font-bold text-emerald-600">
+                            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-emerald-600">
                               {newAmount || "٠"} 
-                              <span className="text-lg mr-1">ل.س جديدة</span>
+                              <span className="text-sm sm:text-lg mr-1">ل.س جديدة</span>
                             </p>
                           </div>
                         </div>
 
                         {/* Arabic Words Result */}
-                        <div className="pt-4 border-t border-emerald-200/50">
+                        <div className="pt-3 md:pt-4 border-t border-emerald-200/50">
                           <p className="text-sm text-muted-foreground mb-2">بالكلمات</p>
                           <div className="space-y-2">
                             {getOldNumericValue() > 0 && (
                               <motion.p 
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className="text-lg font-semibold text-amber-700 bg-amber-50 rounded-lg py-2 px-4 inline-block"
+                                className="text-base sm:text-lg font-semibold text-amber-700 bg-amber-50 rounded-lg py-2 px-3 sm:px-4 inline-block max-w-full break-words"
                               >
                                 {numberToSimpleArabicWords(getOldNumericValue())} ليرة قديمة
                               </motion.p>
@@ -507,7 +507,7 @@ export default function Home() {
                               <motion.p 
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className="text-lg font-semibold text-emerald-700 bg-emerald-50 rounded-lg py-2 px-4 inline-block"
+                                className="text-base sm:text-lg font-semibold text-emerald-700 bg-emerald-50 rounded-lg py-2 px-3 sm:px-4 inline-block max-w-full break-words"
                               >
                                 {numberToSimpleArabicWords(getNewNumericValue())} ليرة جديدة
                               </motion.p>
