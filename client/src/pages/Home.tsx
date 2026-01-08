@@ -182,7 +182,8 @@ export default function Home() {
             <Card className="glass shadow-2xl border-0 overflow-hidden">
               <div className="p-6 md:p-8">
                 {/* Direction Tabs - Two Icons at Top */}
-                <div className="flex justify-center mb-8">
+                <div className="flex flex-col items-center mb-8">
+                  <p className="text-sm text-muted-foreground mb-3">اختر نوع التحويل</p>
                   <div className="inline-flex bg-secondary/30 rounded-2xl p-1.5 gap-2">
                     {/* Old to New Tab */}
                     <button
@@ -212,7 +213,7 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-medium">قديمة ← جديدة</span>
+                      <span className="text-sm font-medium">قديمة إلى جديدة</span>
                       {direction === "old-to-new" && (
                         <motion.div
                           layoutId="activeTab"
@@ -250,7 +251,7 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-medium">جديدة ← قديمة</span>
+                      <span className="text-sm font-medium">جديدة إلى قديمة</span>
                       {direction === "new-to-old" && (
                         <motion.div
                           layoutId="activeTab"
