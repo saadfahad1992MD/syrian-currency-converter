@@ -36,23 +36,23 @@ export default function Home() {
   const [useArabicNumerals, setUseArabicNumerals] = useState(true);
 
   // Convert old to new
-  const convertOldToNew = useCallback((value: string, useArabic: boolean) => {
+  const convertOldToNew = useCallback((value: string) => {
     if (!value || isNaN(Number(value))) {
       setNewAmount("");
       return;
     }
     const result = Number(value) / CONVERSION_RATE;
-    setNewAmount(formatNumber(result, useArabic, 2));
+    setNewAmount(result.toLocaleString('en-US', { maximumFractionDigits: 2 }));
   }, []);
 
   // Convert new to old
-  const convertNewToOld = useCallback((value: string, useArabic: boolean) => {
+  const convertNewToOld = useCallback((value: string) => {
     if (!value || isNaN(Number(value))) {
       setOldAmount("");
       return;
     }
     const result = Number(value) * CONVERSION_RATE;
-    setOldAmount(formatNumber(result, useArabic, 0));
+    setOldAmount(result.toLocaleString('en-US', { maximumFractionDigits: 0 }));
   }, []);
 
   // Convert Arabic numerals to English
@@ -92,11 +92,6 @@ export default function Home() {
 
   // Handle input change for old amount
   const handleOldAmountChange = (value: string) => {
-    // Check if input contains Arabic numerals
-    const isArabic = hasArabicNumerals(value);
-    if (value.length > 0) {
-      setUseArabicNumerals(isArabic);
-    }
     // Convert Arabic numerals to English first
     const englishValue = arabicToEnglish(value);
     const cleanValue = englishValue.replace(/[^\d.]/g, "");
@@ -104,7 +99,7 @@ export default function Home() {
     if (direction === "old-to-new") {
       setIsConverting(true);
       setTimeout(() => {
-        convertOldToNew(cleanValue, isArabic || (value.length === 0 && useArabicNumerals));
+        convertOldToNew(cleanValue);
         setIsConverting(false);
       }, 150);
     }
@@ -112,11 +107,6 @@ export default function Home() {
 
   // Handle input change for new amount
   const handleNewAmountChange = (value: string) => {
-    // Check if input contains Arabic numerals
-    const isArabic = hasArabicNumerals(value);
-    if (value.length > 0) {
-      setUseArabicNumerals(isArabic);
-    }
     // Convert Arabic numerals to English first
     const englishValue = arabicToEnglish(value);
     const cleanValue = englishValue.replace(/[^\d.]/g, "");
@@ -124,7 +114,7 @@ export default function Home() {
     if (direction === "new-to-old") {
       setIsConverting(true);
       setTimeout(() => {
-        convertNewToOld(cleanValue, isArabic || (value.length === 0 && useArabicNumerals));
+        convertNewToOld(cleanValue);
         setIsConverting(false);
       }, 150);
     }
@@ -136,17 +126,6 @@ export default function Home() {
       setDirection(newDirection);
       setOldAmount("");
       setNewAmount("");
-    }
-  };
-
-  // Quick amount buttons
-  const handleQuickAmount = (amount: number) => {
-    if (direction === "old-to-new") {
-      setOldAmount(amount.toString());
-      convertOldToNew(amount.toString(), useArabicNumerals);
-    } else {
-      setNewAmount(amount.toString());
-      convertNewToOld(amount.toString(), useArabicNumerals);
     }
   };
 
@@ -340,21 +319,6 @@ export default function Home() {
                             ل.س
                           </span>
                         </div>
-
-                        {/* Quick amounts */}
-                        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
-                          {OLD_DENOMINATIONS.map((amount) => (
-                            <Button
-                              key={amount}
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleQuickAmount(amount)}
-                              className="text-xs border-amber-200 hover:bg-amber-50 hover:border-amber-300 px-2 sm:px-3"
-                            >
-                              {amount.toLocaleString("ar-SY")}
-                            </Button>
-                          ))}
-                        </div>
                       </div>
 
                       {/* Arrow Divider */}
@@ -436,20 +400,6 @@ export default function Home() {
                           </span>
                         </div>
 
-                        {/* Quick amounts */}
-                        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center">
-                          {NEW_DENOMINATIONS.map((amount) => (
-                            <Button
-                              key={amount}
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleQuickAmount(amount)}
-                              className="text-xs border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300 px-2 sm:px-3"
-                            >
-                              {amount.toLocaleString("ar-SY")}
-                            </Button>
-                          ))}
-                        </div>
                       </div>
 
                       {/* Arrow Divider */}
@@ -610,37 +560,6 @@ export default function Home() {
               </div>
             </Card>
           </motion.div>
-
-          {/* New Denominations Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-            className="mt-8"
-          >
-            <Card className="p-6 bg-white/80 backdrop-blur">
-              <div className="flex items-center gap-3 mb-4">
-                <Banknote className="w-6 h-6 text-emerald-600" />
-                <h2 className="text-xl font-bold text-foreground">فئات العملة الجديدة</h2>
-              </div>
-              <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                {NEW_DENOMINATIONS.map((denom, index) => (
-                  <motion.div
-                    key={denom}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.9 + index * 0.1 }}
-                    className="text-center p-3 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200"
-                  >
-                    <p className="text-2xl font-bold text-emerald-700">{denom}</p>
-                    <p className="text-xs text-emerald-600">ليرة</p>
-                  </motion.div>
-                ))}
-              </div>
-
-            </Card>
-          </motion.div>
-
           {/* FAQ Section */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
