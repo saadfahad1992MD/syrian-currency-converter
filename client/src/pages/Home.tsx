@@ -54,9 +54,21 @@ export default function Home() {
     setOldAmount(result.toLocaleString("ar-SY", { maximumFractionDigits: 0 }));
   }, []);
 
+  // Convert Arabic numerals to English
+  const arabicToEnglish = (str: string): string => {
+    const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    let result = str;
+    arabicNumerals.forEach((arabic, index) => {
+      result = result.replace(new RegExp(arabic, 'g'), index.toString());
+    });
+    return result;
+  };
+
   // Handle input change for old amount
   const handleOldAmountChange = (value: string) => {
-    const cleanValue = value.replace(/[^\d.]/g, "");
+    // Convert Arabic numerals to English first
+    const englishValue = arabicToEnglish(value);
+    const cleanValue = englishValue.replace(/[^\d.]/g, "");
     setOldAmount(cleanValue);
     if (direction === "old-to-new") {
       setIsConverting(true);
@@ -69,7 +81,9 @@ export default function Home() {
 
   // Handle input change for new amount
   const handleNewAmountChange = (value: string) => {
-    const cleanValue = value.replace(/[^\d.]/g, "");
+    // Convert Arabic numerals to English first
+    const englishValue = arabicToEnglish(value);
+    const cleanValue = englishValue.replace(/[^\d.]/g, "");
     setNewAmount(cleanValue);
     if (direction === "new-to-old") {
       setIsConverting(true);
@@ -163,9 +177,9 @@ export default function Home() {
           <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto drop-shadow">
             حوّل بين الليرة السورية القديمة والجديدة بسهولة
           </p>
-          <div className="mt-4 inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-white text-sm">
-            <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-            <span>١٠٠ ليرة قديمة = ١ ليرة جديدة</span>
+          <div className="mt-4 inline-flex items-center gap-2 bg-white/30 backdrop-blur-md rounded-full px-4 sm:px-6 py-2 sm:py-3 text-white border border-white/30 shadow-lg">
+            <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" />
+            <span className="text-sm sm:text-base font-medium whitespace-nowrap">١٠٠ ليرة قديمة = ١ ليرة جديدة</span>
           </div>
         </motion.div>
       </section>
@@ -184,15 +198,15 @@ export default function Home() {
                 {/* Direction Tabs - Two Icons at Top */}
                 <div className="flex flex-col items-center mb-6 md:mb-8">
                   <p className="text-sm text-muted-foreground mb-3">اختر نوع التحويل</p>
-                  <div className="flex flex-col sm:flex-row bg-secondary/30 rounded-2xl p-1.5 gap-2 w-full sm:w-auto">
+                  <div className="flex flex-col sm:flex-row bg-secondary/30 rounded-2xl p-2 gap-3 w-full sm:w-auto">
                     {/* Old to New Tab */}
                     <button
                       onClick={() => setConversionDirection("old-to-new")}
                       className={`
                         relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all duration-300 w-full sm:w-auto
                         ${direction === "old-to-new" 
-                          ? "bg-white shadow-lg text-foreground" 
-                          : "text-muted-foreground hover:text-foreground hover:bg-white/50"
+                          ? "bg-white shadow-lg text-foreground ring-2 ring-emerald-500 ring-offset-2" 
+                          : "bg-white/50 text-muted-foreground hover:text-foreground hover:bg-white/80 border border-gray-200"
                         }
                       `}
                     >
@@ -204,7 +218,7 @@ export default function Home() {
                             className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
-                        <ArrowLeft className={`w-4 h-4 shrink-0 ${direction === "old-to-new" ? "text-primary" : "text-muted-foreground"}`} />
+                        <ArrowLeft className={`w-4 h-4 shrink-0 ${direction === "old-to-new" ? "text-emerald-600" : "text-muted-foreground"}`} />
                         <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-emerald-100" : "bg-emerald-50"}`}>
                           <img 
                             src="/images/new-currency.png" 
@@ -213,14 +227,7 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-medium whitespace-nowrap">قديمة إلى جديدة</span>
-                      {direction === "old-to-new" && (
-                        <motion.div
-                          layoutId="activeTab"
-                          className="absolute inset-0 bg-white rounded-xl shadow-lg -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                        />
-                      )}
+                      <span className={`text-sm font-semibold whitespace-nowrap ${direction === "old-to-new" ? "text-emerald-700" : ""}`}>قديمة إلى جديدة</span>
                     </button>
 
                     {/* New to Old Tab */}
@@ -229,8 +236,8 @@ export default function Home() {
                       className={`
                         relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all duration-300 w-full sm:w-auto
                         ${direction === "new-to-old" 
-                          ? "bg-white shadow-lg text-foreground" 
-                          : "text-muted-foreground hover:text-foreground hover:bg-white/50"
+                          ? "bg-white shadow-lg text-foreground ring-2 ring-emerald-500 ring-offset-2" 
+                          : "bg-white/50 text-muted-foreground hover:text-foreground hover:bg-white/80 border border-gray-200"
                         }
                       `}
                     >
@@ -242,7 +249,7 @@ export default function Home() {
                             className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
-                        <ArrowLeft className={`w-4 h-4 shrink-0 ${direction === "new-to-old" ? "text-primary" : "text-muted-foreground"}`} />
+                        <ArrowLeft className={`w-4 h-4 shrink-0 ${direction === "new-to-old" ? "text-emerald-600" : "text-muted-foreground"}`} />
                         <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-amber-100" : "bg-amber-50"}`}>
                           <img 
                             src="/images/old-currency.png" 
@@ -251,14 +258,7 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <span className="text-sm font-medium whitespace-nowrap">جديدة إلى قديمة</span>
-                      {direction === "new-to-old" && (
-                        <motion.div
-                          layoutId="activeTab"
-                          className="absolute inset-0 bg-white rounded-xl shadow-lg -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                        />
-                      )}
+                      <span className={`text-sm font-semibold whitespace-nowrap ${direction === "new-to-old" ? "text-emerald-700" : ""}`}>جديدة إلى قديمة</span>
                     </button>
                   </div>
                 </div>
