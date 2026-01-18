@@ -5,7 +5,7 @@
  * Now includes Arabic words display and tab-based direction switching
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,9 @@ import {
   CheckCircle2,
   HelpCircle,
   ArrowRight,
-  ArrowLeft
+  ArrowLeft,
+  Download,
+  Smartphone
 } from "lucide-react";
 import { numberToSimpleArabicWords } from "@/lib/numberToArabicWords";
 
@@ -34,6 +36,30 @@ export default function Home() {
   const [direction, setDirection] = useState<"old-to-new" | "new-to-old">("old-to-new");
   const [isConverting, setIsConverting] = useState(false);
   const [useArabicNumerals, setUseArabicNumerals] = useState(true);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
+
+  // PWA Install prompt handler
+  useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setShowInstallButton(false);
+      }
+      setDeferredPrompt(null);
+    }
+  };
 
   // Convert old to new
   const convertOldToNew = useCallback((value: string) => {
@@ -196,6 +222,17 @@ export default function Home() {
             <CheckCircle2 className="w-5 h-5 text-emerald-300 shrink-0" />
             <span className="text-sm sm:text-base font-medium">١٠٠ ليرة قديمة = ١ ليرة جديدة</span>
           </div>
+          
+          {/* Install App Button */}
+          <motion.button
+            onClick={handleInstallClick}
+            className="mt-4 inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-white border border-emerald-500 shadow-lg transition-all duration-300 hover:scale-105"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Download className="w-5 h-5 shrink-0" />
+            <span className="text-sm sm:text-base font-semibold">تحميل التطبيق</span>
+          </motion.button>
         </motion.div>
       </section>
 
