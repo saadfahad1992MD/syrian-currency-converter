@@ -218,62 +218,62 @@ export default function Home() {
                     <button
                       onClick={() => setConversionDirection("old-to-new")}
                       className={`
-                        relative flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 flex-1 sm:flex-none sm:w-auto
+                        relative flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 flex-1 sm:flex-none sm:w-auto
                         ${direction === "old-to-new" 
                           ? "bg-white shadow-lg text-foreground ring-2 ring-emerald-500 ring-offset-2" 
                           : "bg-white/50 text-muted-foreground hover:text-foreground hover:bg-white/80 border border-gray-200"
                         }
                       `}
                     >
-                      <div className="flex items-center gap-2 shrink-0">
-                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-amber-100" : "bg-amber-50"}`}>
+                      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                        <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-amber-100" : "bg-amber-50"}`}>
                           <img 
                             src="/images/old-currency.png" 
                             alt="قديمة" 
-                            className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
+                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
-                        <ArrowLeft className={`w-4 h-4 shrink-0 ${direction === "old-to-new" ? "text-emerald-600" : "text-muted-foreground"}`} />
-                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-emerald-100" : "bg-emerald-50"}`}>
+                        <ArrowLeft className={`w-3 h-3 sm:w-4 sm:h-4 shrink-0 ${direction === "old-to-new" ? "text-emerald-600" : "text-muted-foreground"}`} />
+                        <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-emerald-100" : "bg-emerald-50"}`}>
                           <img 
                             src="/images/new-currency.png" 
                             alt="جديدة" 
-                            className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
+                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
                       </div>
-                      <span className={`text-xs sm:text-sm font-semibold whitespace-nowrap ${direction === "old-to-new" ? "text-emerald-700" : ""}`}>قديمة إلى جديدة</span>
+                      <span className={`text-[10px] sm:text-sm font-semibold whitespace-nowrap ${direction === "old-to-new" ? "text-emerald-700" : ""}`}>قديمة إلى جديدة</span>
                     </button>
 
                     {/* New to Old Tab */}
                     <button
                       onClick={() => setConversionDirection("new-to-old")}
                       className={`
-                        relative flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 flex-1 sm:flex-none sm:w-auto
+                        relative flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 flex-1 sm:flex-none sm:w-auto
                         ${direction === "new-to-old" 
                           ? "bg-white shadow-lg text-foreground ring-2 ring-emerald-500 ring-offset-2" 
                           : "bg-white/50 text-muted-foreground hover:text-foreground hover:bg-white/80 border border-gray-200"
                         }
                       `}
                     >
-                      <div className="flex items-center gap-2 shrink-0">
-                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-emerald-100" : "bg-emerald-50"}`}>
+                      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                        <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-emerald-100" : "bg-emerald-50"}`}>
                           <img 
                             src="/images/new-currency.png" 
                             alt="جديدة" 
-                            className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
+                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
-                        <ArrowLeft className={`w-4 h-4 shrink-0 ${direction === "new-to-old" ? "text-emerald-600" : "text-muted-foreground"}`} />
-                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-amber-100" : "bg-amber-50"}`}>
+                        <ArrowLeft className={`w-3 h-3 sm:w-4 sm:h-4 shrink-0 ${direction === "new-to-old" ? "text-emerald-600" : "text-muted-foreground"}`} />
+                        <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-amber-100" : "bg-amber-50"}`}>
                           <img 
                             src="/images/old-currency.png" 
                             alt="قديمة" 
-                            className="w-5 h-5 sm:w-6 sm:h-6 object-cover"
+                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover"
                           />
                         </div>
                       </div>
-                      <span className={`text-xs sm:text-sm font-semibold whitespace-nowrap ${direction === "new-to-old" ? "text-emerald-700" : ""}`}>جديدة إلى قديمة</span>
+                      <span className={`text-[10px] sm:text-sm font-semibold whitespace-nowrap ${direction === "new-to-old" ? "text-emerald-700" : ""}`}>جديدة إلى قديمة</span>
                     </button>
                   </div>
                 </div>
