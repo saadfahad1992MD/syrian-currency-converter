@@ -319,6 +319,11 @@ export default function Home() {
                             ل.س
                           </span>
                         </div>
+                        {getOldNumericValue() > 0 && (
+                          <p className="text-sm text-amber-600 text-center mt-1">
+                            {numberToSimpleArabicWords(getOldNumericValue())}
+                          </p>
+                        )}
                       </div>
 
                       {/* Arrow Divider */}
@@ -399,7 +404,11 @@ export default function Home() {
                             ل.س
                           </span>
                         </div>
-
+                        {getNewNumericValue() > 0 && (
+                          <p className="text-sm text-emerald-600 text-center mt-1">
+                            {numberToSimpleArabicWords(getNewNumericValue())}
+                          </p>
+                        )}
                       </div>
 
                       {/* Arrow Divider */}
