@@ -19,8 +19,18 @@ import {
   ArrowRight,
   ArrowLeft,
   Download,
-  Smartphone
+  Smartphone,
+  X,
+  Share,
+  MoreVertical
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { numberToSimpleArabicWords } from "@/lib/numberToArabicWords";
 
 // Conversion rate: 100 old = 1 new
@@ -37,28 +47,31 @@ export default function Home() {
   const [isConverting, setIsConverting] = useState(false);
   const [useArabicNumerals, setUseArabicNumerals] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showInstallButton, setShowInstallButton] = useState(false);
+  const [showInstallDialog, setShowInstallDialog] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
+
+  // Detect device type
+  useEffect(() => {
+    const userAgent = navigator.userAgent || navigator.vendor;
+    setIsIOS(/iPad|iPhone|iPod/.test(userAgent));
+    setIsAndroid(/android/i.test(userAgent));
+  }, []);
 
   // PWA Install prompt handler
   useEffect(() => {
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      setShowInstallButton(true);
     };
     window.addEventListener('beforeinstallprompt', handler);
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
-  const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        setShowInstallButton(false);
-      }
-      setDeferredPrompt(null);
-    }
+  const handleInstallClick = () => {
+    // Always show install instructions dialog
+    // PWA native prompt is not reliable across browsers
+    setShowInstallDialog(true);
   };
 
   // Convert old to new
@@ -224,15 +237,13 @@ export default function Home() {
           </div>
           
           {/* Install App Button */}
-          <motion.button
+          <button
             onClick={handleInstallClick}
-            className="mt-4 inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-white border border-emerald-500 shadow-lg transition-all duration-300 hover:scale-105"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className="mt-4 inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-white border border-emerald-500 shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
           >
             <Download className="w-5 h-5 shrink-0" />
             <span className="text-sm sm:text-base font-semibold">تحميل التطبيق</span>
-          </motion.button>
+          </button>
         </motion.div>
       </section>
 
@@ -652,6 +663,67 @@ export default function Home() {
 
         </div>
       </footer>
+
+      {/* Install Instructions Dialog */}
+      <Dialog open={showInstallDialog} onOpenChange={setShowInstallDialog}>
+        <DialogContent className="sm:max-w-md" dir="rtl">
+          <DialogHeader>
+            <DialogTitle className="text-right flex items-center gap-2 justify-end">
+              <span>تحميل التطبيق</span>
+              <Smartphone className="w-5 h-5 text-emerald-600" />
+            </DialogTitle>
+            <DialogDescription className="text-right">
+              اتبع الخطوات التالية لتثبيت التطبيق على جهازك
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            {isIOS ? (
+              <div className="space-y-3">
+                <h4 className="font-semibold text-emerald-700 text-right">لأجهزة iPhone و iPad:</h4>
+                <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600 text-right" dir="rtl">
+                  <li className="flex items-center gap-2 justify-end flex-row-reverse">
+                    <span>اضغط على زر المشاركة</span>
+                    <Share className="w-4 h-4 text-blue-500" />
+                  </li>
+                  <li>اختر "إضافة إلى الشاشة الرئيسية"</li>
+                  <li>اضغط "إضافة" في الأعلى</li>
+                </ol>
+              </div>
+            ) : isAndroid ? (
+              <div className="space-y-3">
+                <h4 className="font-semibold text-emerald-700 text-right">لأجهزة Android:</h4>
+                <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600 text-right" dir="rtl">
+                  <li className="flex items-center gap-2 justify-end flex-row-reverse">
+                    <span>اضغط على قائمة المتصفح</span>
+                    <MoreVertical className="w-4 h-4 text-gray-500" />
+                  </li>
+                  <li>اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"</li>
+                  <li>اضغط "تثبيت" للتأكيد</li>
+                </ol>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <h4 className="font-semibold text-emerald-700 text-right">للكمبيوتر:</h4>
+                <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600 text-right" dir="rtl">
+                  <li>ابحث عن أيقونة التثبيت في شريط العنوان</li>
+                  <li>أو اضغط على قائمة المتصفح واختر "تثبيت"</li>
+                </ol>
+              </div>
+            )}
+            <div className="mt-4 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+              <p className="text-xs text-emerald-700 text-center">
+                بعد التثبيت، ستجد التطبيق على شاشتك الرئيسية للوصول السريع
+              </p>
+            </div>
+          </div>
+          <Button 
+            onClick={() => setShowInstallDialog(false)}
+            className="w-full bg-emerald-600 hover:bg-emerald-700"
+          >
+            فهمت
+          </Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
