@@ -228,17 +228,17 @@ export default function Home() {
                       <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                         <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-amber-100" : "bg-amber-50"}`}>
                           <img 
-                            src="/images/old-currency.png" 
+                            src="/images/assad.jpg" 
                             alt="قديمة" 
-                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover"
+                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover rounded-full"
                           />
                         </div>
                         <ArrowLeft className={`w-3 h-3 sm:w-4 sm:h-4 shrink-0 ${direction === "old-to-new" ? "text-emerald-600" : "text-muted-foreground"}`} />
                         <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "old-to-new" ? "bg-emerald-100" : "bg-emerald-50"}`}>
                           <img 
-                            src="/images/new-currency.png" 
+                            src="/images/sharaa.jpg" 
                             alt="جديدة" 
-                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover"
+                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover rounded-full"
                           />
                         </div>
                       </div>
@@ -259,17 +259,17 @@ export default function Home() {
                       <div className="flex items-center gap-1 sm:gap-2 shrink-0">
                         <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-emerald-100" : "bg-emerald-50"}`}>
                           <img 
-                            src="/images/new-currency.png" 
+                            src="/images/sharaa.jpg" 
                             alt="جديدة" 
-                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover"
+                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover rounded-full"
                           />
                         </div>
                         <ArrowLeft className={`w-3 h-3 sm:w-4 sm:h-4 shrink-0 ${direction === "new-to-old" ? "text-emerald-600" : "text-muted-foreground"}`} />
                         <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${direction === "new-to-old" ? "bg-amber-100" : "bg-amber-50"}`}>
                           <img 
-                            src="/images/old-currency.png" 
+                            src="/images/assad.jpg" 
                             alt="قديمة" 
-                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover"
+                            className="w-4 h-4 sm:w-6 sm:h-6 object-cover rounded-full"
                           />
                         </div>
                       </div>
@@ -294,9 +294,9 @@ export default function Home() {
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-100 flex items-center justify-center overflow-hidden shrink-0">
                             <img 
-                              src="/images/old-currency.png" 
+                              src="/images/assad.jpg" 
                               alt="العملة القديمة" 
-                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover"
+                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded-full"
                             />
                           </div>
                           <div>
@@ -338,9 +338,9 @@ export default function Home() {
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-100 flex items-center justify-center overflow-hidden shrink-0">
                             <img 
-                              src="/images/new-currency.png" 
+                              src="/images/sharaa.jpg" 
                               alt="العملة الجديدة" 
-                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover"
+                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded-full"
                             />
                           </div>
                           <div>
@@ -379,9 +379,9 @@ export default function Home() {
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-100 flex items-center justify-center overflow-hidden shrink-0">
                             <img 
-                              src="/images/new-currency.png" 
+                              src="/images/sharaa.jpg" 
                               alt="العملة الجديدة" 
-                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover"
+                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded-full"
                             />
                           </div>
                           <div>
@@ -423,9 +423,9 @@ export default function Home() {
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-100 flex items-center justify-center overflow-hidden shrink-0">
                             <img 
-                              src="/images/old-currency.png" 
+                              src="/images/assad.jpg" 
                               alt="العملة القديمة" 
-                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover"
+                              className="w-8 h-8 sm:w-10 sm:h-10 object-cover rounded-full"
                             />
                           </div>
                           <div>
