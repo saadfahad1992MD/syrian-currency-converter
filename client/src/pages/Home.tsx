@@ -213,12 +213,12 @@ export default function Home() {
                 {/* Direction Tabs - Two Icons at Top */}
                 <div className="flex flex-col items-center mb-6 md:mb-8">
                   <p className="text-sm text-muted-foreground mb-3">اختر نوع التحويل</p>
-                  <div className="flex flex-col sm:flex-row bg-secondary/30 rounded-2xl p-2 gap-3 w-full sm:w-auto">
+                  <div className="flex flex-row bg-secondary/30 rounded-2xl p-2 gap-2 w-full sm:w-auto justify-center">
                     {/* Old to New Tab */}
                     <button
                       onClick={() => setConversionDirection("old-to-new")}
                       className={`
-                        relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all duration-300 w-full sm:w-auto
+                        relative flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 flex-1 sm:flex-none sm:w-auto
                         ${direction === "old-to-new" 
                           ? "bg-white shadow-lg text-foreground ring-2 ring-emerald-500 ring-offset-2" 
                           : "bg-white/50 text-muted-foreground hover:text-foreground hover:bg-white/80 border border-gray-200"
@@ -242,14 +242,14 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <span className={`text-sm font-semibold whitespace-nowrap ${direction === "old-to-new" ? "text-emerald-700" : ""}`}>قديمة إلى جديدة</span>
+                      <span className={`text-xs sm:text-sm font-semibold whitespace-nowrap ${direction === "old-to-new" ? "text-emerald-700" : ""}`}>قديمة إلى جديدة</span>
                     </button>
 
                     {/* New to Old Tab */}
                     <button
                       onClick={() => setConversionDirection("new-to-old")}
                       className={`
-                        relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all duration-300 w-full sm:w-auto
+                        relative flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-300 flex-1 sm:flex-none sm:w-auto
                         ${direction === "new-to-old" 
                           ? "bg-white shadow-lg text-foreground ring-2 ring-emerald-500 ring-offset-2" 
                           : "bg-white/50 text-muted-foreground hover:text-foreground hover:bg-white/80 border border-gray-200"
@@ -273,7 +273,7 @@ export default function Home() {
                           />
                         </div>
                       </div>
-                      <span className={`text-sm font-semibold whitespace-nowrap ${direction === "new-to-old" ? "text-emerald-700" : ""}`}>جديدة إلى قديمة</span>
+                      <span className={`text-xs sm:text-sm font-semibold whitespace-nowrap ${direction === "new-to-old" ? "text-emerald-700" : ""}`}>جديدة إلى قديمة</span>
                     </button>
                   </div>
                 </div>
