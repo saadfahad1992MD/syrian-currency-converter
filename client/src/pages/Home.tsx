@@ -87,10 +87,15 @@ export default function Home() {
   }, []);
 
   const handleInstallClick = useCallback(() => {
+    console.log('handleInstallClick called');
+    console.log('deferredPrompt:', deferredPrompt);
+    
     // Try native PWA prompt first if available (for Android Chrome)
     if (deferredPrompt) {
+      console.log('Using native prompt');
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
+        console.log('User choice:', choiceResult.outcome);
         if (choiceResult.outcome === 'accepted') {
           setShowInstallBanner(false);
         }
@@ -98,6 +103,7 @@ export default function Home() {
       });
     } else {
       // Show install instructions dialog for iOS and other browsers
+      console.log('Showing install dialog');
       setShowInstallDialog(true);
     }
   }, [deferredPrompt]);
@@ -272,7 +278,12 @@ export default function Home() {
           
           {/* Install App Button */}
           <button
-            onClick={handleInstallClick}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleInstallClick();
+            }}
             className="mt-4 inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-white border border-emerald-500 shadow-lg transition-all duration-300 hover:scale-105 active:scale-95"
           >
             <Download className="w-5 h-5 shrink-0" />
@@ -790,7 +801,12 @@ export default function Home() {
                 {/* Action Buttons */}
                 <div className="flex items-center gap-2 shrink-0">
                   <Button
-                    onClick={() => setShowInstallDialog(true)}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleInstallClick();
+                    }}
                     className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-sm transition-colors shadow-lg"
                   >
                     تثبيت التطبيق
