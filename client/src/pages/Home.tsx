@@ -711,7 +711,7 @@ export default function Home() {
 
       {/* Install Instructions Dialog */}
       <Dialog open={showInstallDialog} onOpenChange={setShowInstallDialog}>
-        <DialogContent className="sm:max-w-md" dir="rtl">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto" dir="rtl">
           <DialogHeader>
             <DialogTitle className="text-right flex items-center gap-2 justify-end">
               <span>تحميل التطبيق</span>
@@ -723,16 +723,69 @@ export default function Home() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             {isIOS ? (
-              <div className="space-y-3">
-                <h4 className="font-semibold text-emerald-700 text-right">لأجهزة iPhone و iPad:</h4>
-                <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600 text-right" dir="rtl">
-                  <li className="flex items-center gap-2 justify-end flex-row-reverse">
-                    <span>اضغط على زر المشاركة</span>
-                    <Share className="w-4 h-4 text-blue-500" />
-                  </li>
-                  <li>اختر "إضافة إلى الشاشة الرئيسية"</li>
-                  <li>اضغط "إضافة" في الأعلى</li>
-                </ol>
+              <div className="space-y-4">
+                {/* Header with Apple icon */}
+                <div className="flex items-center gap-3 justify-center pb-2 border-b border-gray-200">
+                  <svg className="w-8 h-8 text-gray-800" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  </svg>
+                  <h4 className="font-bold text-gray-800 text-lg">تثبيت على iPhone / iPad</h4>
+                </div>
+                
+                {/* Step 1 */}
+                <div className="bg-gradient-to-l from-blue-50 to-white rounded-2xl p-4 border border-blue-100 shadow-sm">
+                  <div className="flex items-start gap-4 flex-row-reverse">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-500 text-white flex items-center justify-center shrink-0 shadow-lg">
+                      <Share className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 text-right">
+                      <div className="flex items-center gap-2 justify-end mb-1">
+                        <span className="font-bold text-gray-800">اضغط على زر المشاركة</span>
+                        <span className="w-6 h-6 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold">١</span>
+                      </div>
+                      <p className="text-sm text-gray-600">في شريط Safari السفلي، ابحث عن أيقونة المربع مع السهم للأعلى</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Step 2 */}
+                <div className="bg-gradient-to-l from-emerald-50 to-white rounded-2xl p-4 border border-emerald-100 shadow-sm">
+                  <div className="flex items-start gap-4 flex-row-reverse">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-lg">
+                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                      </svg>
+                    </div>
+                    <div className="flex-1 text-right">
+                      <div className="flex items-center gap-2 justify-end mb-1">
+                        <span className="font-bold text-gray-800">إضافة للشاشة الرئيسية</span>
+                        <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs font-bold">٢</span>
+                      </div>
+                      <p className="text-sm text-gray-600">مرر للأسفل واختر <span className="font-semibold text-emerald-700">"Add to Home Screen"</span></p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Step 3 */}
+                <div className="bg-gradient-to-l from-amber-50 to-white rounded-2xl p-4 border border-amber-100 shadow-sm">
+                  <div className="flex items-start gap-4 flex-row-reverse">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-lg">
+                      <CheckCircle2 className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1 text-right">
+                      <div className="flex items-center gap-2 justify-end mb-1">
+                        <span className="font-bold text-gray-800">اضغط "Add" للتأكيد</span>
+                        <span className="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold">٣</span>
+                      </div>
+                      <p className="text-sm text-gray-600">في أعلى يمين الشاشة، اضغط على <span className="font-semibold text-amber-700">"Add"</span></p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Success message */}
+                <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-4 text-center shadow-lg">
+                  <p className="text-white font-bold text-base">🎉 تم! ستجد التطبيق على شاشتك الرئيسية</p>
+                </div>
               </div>
             ) : isAndroid ? (
               <div className="space-y-3">
