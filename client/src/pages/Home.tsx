@@ -48,14 +48,32 @@ export default function Home() {
   const [useArabicNumerals, setUseArabicNumerals] = useState(true);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showInstallDialog, setShowInstallDialog] = useState(false);
+  const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [isAndroid, setIsAndroid] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
 
-  // Detect device type
+  // Detect device type and standalone mode
   useEffect(() => {
     const userAgent = navigator.userAgent || navigator.vendor;
     setIsIOS(/iPad|iPhone|iPod/.test(userAgent));
     setIsAndroid(/android/i.test(userAgent));
+    
+    // Check if already installed as PWA
+    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches || 
+                               (window.navigator as any).standalone === true;
+    setIsStandalone(isInStandaloneMode);
+    
+    // Check if banner was dismissed
+    const bannerDismissed = localStorage.getItem('installBannerDismissed');
+    
+    // Show install banner after a short delay if not installed and not dismissed
+    if (!isInStandaloneMode && !bannerDismissed) {
+      const timer = setTimeout(() => {
+        setShowInstallBanner(true);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   // PWA Install prompt handler
@@ -68,10 +86,26 @@ export default function Home() {
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
-  const handleInstallClick = () => {
-    // Always show install instructions dialog
-    // PWA native prompt is not reliable across browsers
-    setShowInstallDialog(true);
+  const handleInstallClick = useCallback(() => {
+    // Try native PWA prompt first if available (for Android Chrome)
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
+        if (choiceResult.outcome === 'accepted') {
+          setShowInstallBanner(false);
+        }
+        setDeferredPrompt(null);
+      });
+    } else {
+      // Show install instructions dialog for iOS and other browsers
+      setShowInstallDialog(true);
+    }
+  }, [deferredPrompt]);
+
+  const dismissInstallBanner = () => {
+    setShowInstallBanner(false);
+    // Store in localStorage to not show again for this session
+    localStorage.setItem('installBannerDismissed', 'true');
   };
 
   // Convert old to new
@@ -724,6 +758,56 @@ export default function Home() {
           </Button>
         </DialogContent>
       </Dialog>
+
+      {/* Fixed Install Banner at Bottom */}
+      <AnimatePresence>
+        {showInstallBanner && !isStandalone && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gray-900 border-t border-gray-700 shadow-2xl"
+            dir="rtl"
+          >
+            <div className="container max-w-4xl mx-auto">
+              <div className="flex items-center gap-4">
+                {/* App Icon */}
+                <div className="w-14 h-14 rounded-xl bg-emerald-600 flex items-center justify-center shrink-0 shadow-lg">
+                  <Download className="w-7 h-7 text-white" />
+                </div>
+                
+                {/* Text Content */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-white text-base sm:text-lg truncate">
+                    تثبيت محول العملة
+                  </h3>
+                  <p className="text-gray-400 text-xs sm:text-sm truncate">
+                    أضفه للشاشة الرئيسية للوصول السريع
+                  </p>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    onClick={() => setShowInstallDialog(true)}
+                    className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-sm transition-colors shadow-lg"
+                  >
+                    تثبيت التطبيق
+                  </Button>
+                  <button
+                    onClick={dismissInstallBanner}
+                    className="p-2 text-gray-400 hover:text-white transition-colors"
+                    aria-label="إغلاق"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
