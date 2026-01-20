@@ -700,7 +700,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 border-t border-border/50 bg-white/50 backdrop-blur">
+      <footer className="py-6 pb-24 border-t border-border/50 bg-white/50 backdrop-blur">
         <div className="container text-center space-y-2">
           <p className="text-sm text-muted-foreground">
             هذا الموقع للأغراض التعليمية والتوعوية فقط
