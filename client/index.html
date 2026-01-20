@@ -147,17 +147,45 @@
       src="%VITE_ANALYTICS_ENDPOINT%/umami"
       data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
     
-    <!-- Register Service Worker -->
+    <!-- Register Service Worker with Auto Update -->
     <script>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-              console.log('SW registered: ', registration);
-            })
-            .catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
+        window.addEventListener('load', async () => {
+          try {
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('SW registered: ', registration);
+            
+            // Check for updates immediately
+            registration.update();
+            
+            // Check for updates every 60 seconds
+            setInterval(() => {
+              registration.update();
+            }, 60000);
+            
+            // When a new service worker is available, activate it immediately
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // New content is available, refresh the page
+                  console.log('New version available, refreshing...');
+                  newWorker.postMessage('skipWaiting');
+                }
+              });
             });
+            
+            // Refresh page when new service worker takes control
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+              if (!refreshing) {
+                refreshing = true;
+                window.location.reload();
+              }
+            });
+          } catch (error) {
+            console.log('SW registration failed: ', error);
+          }
         });
       }
     </script>
