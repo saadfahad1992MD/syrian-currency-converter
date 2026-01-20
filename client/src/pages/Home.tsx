@@ -701,11 +701,13 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-6 border-t border-border/50 bg-white/50 backdrop-blur">
-        <div className="container text-center">
+        <div className="container text-center space-y-2">
           <p className="text-sm text-muted-foreground">
             هذا الموقع للأغراض التعليمية والتوعوية فقط
           </p>
-
+          <p className="text-sm text-muted-foreground">
+            للتواصل: <a href="mailto:dr.saad.fm1@gmail.com" className="text-emerald-600 hover:text-emerald-700 hover:underline transition-colors">dr.saad.fm1@gmail.com</a>
+          </p>
         </div>
       </footer>
 
