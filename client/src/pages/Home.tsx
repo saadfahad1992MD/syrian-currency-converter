@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback, useEffect } from "react";
+import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -707,6 +708,11 @@ export default function Home() {
           </p>
           <p className="text-sm text-muted-foreground">
             للتواصل: <a href="mailto:dr.saad.fm1@gmail.com" className="text-emerald-600 hover:text-emerald-700 hover:underline transition-colors">dr.saad.fm1@gmail.com</a>
+          </p>
+          <p className="text-sm">
+            <Link href="/privacy">
+              <a className="text-emerald-600 hover:text-emerald-700 hover:underline transition-colors">سياسة الخصوصية</a>
+            </Link>
           </p>
         </div>
       </footer>
