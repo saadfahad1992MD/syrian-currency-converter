@@ -147,47 +147,59 @@
       src="%VITE_ANALYTICS_ENDPOINT%/umami"
       data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
     
-    <!-- Register Service Worker with Auto Update -->
+    <!-- Service Worker with Cache Buster -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', async () => {
+      (async function() {
+        // Clear all caches immediately on page load
+        if ('caches' in window) {
+          const cacheNames = await caches.keys();
+          await Promise.all(cacheNames.map(name => {
+            console.log('Clearing cache:', name);
+            return caches.delete(name);
+          }));
+        }
+        
+        if ('serviceWorker' in navigator) {
+          // First, unregister any old service workers
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (const registration of registrations) {
+            // Force update check
+            await registration.update();
+          }
+          
+          // Register the new service worker
           try {
-            const registration = await navigator.serviceWorker.register('/sw.js');
-            console.log('SW registered: ', registration);
+            const registration = await navigator.serviceWorker.register('/sw.js?v=3');
+            console.log('SW v3 registered:', registration);
             
-            // Check for updates immediately
-            registration.update();
+            // Check for updates every 30 seconds
+            setInterval(() => registration.update(), 30000);
             
-            // Check for updates every 60 seconds
-            setInterval(() => {
-              registration.update();
-            }, 60000);
-            
-            // When a new service worker is available, activate it immediately
+            // When new SW is found, activate immediately
             registration.addEventListener('updatefound', () => {
               const newWorker = registration.installing;
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // New content is available, refresh the page
-                  console.log('New version available, refreshing...');
+                  console.log('New SW installed, activating...');
                   newWorker.postMessage('skipWaiting');
                 }
               });
             });
             
-            // Refresh page when new service worker takes control
+            // Reload when new SW takes control
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
               if (!refreshing) {
                 refreshing = true;
+                console.log('New SW active, reloading...');
                 window.location.reload();
               }
             });
           } catch (error) {
-            console.log('SW registration failed: ', error);
+            console.error('SW registration failed:', error);
           }
-        });
-      }
+        }
+      })();
     </script>
   </body>
 
