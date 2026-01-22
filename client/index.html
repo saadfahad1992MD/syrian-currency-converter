@@ -147,56 +147,36 @@
       src="%VITE_ANALYTICS_ENDPOINT%/umami"
       data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
     
-    <!-- Service Worker with Cache Buster -->
+    <!-- Remove Service Worker and Clear Cache -->
     <script>
       (async function() {
-        // Clear all caches immediately on page load
+        // Step 1: Clear ALL caches immediately
         if ('caches' in window) {
-          const cacheNames = await caches.keys();
-          await Promise.all(cacheNames.map(name => {
-            console.log('Clearing cache:', name);
-            return caches.delete(name);
-          }));
+          try {
+            const cacheNames = await caches.keys();
+            for (const name of cacheNames) {
+              await caches.delete(name);
+              console.log('Deleted cache:', name);
+            }
+          } catch (e) {
+            console.log('Cache clear error:', e);
+          }
         }
         
+        // Step 2: Unregister ALL service workers
         if ('serviceWorker' in navigator) {
-          // First, unregister any old service workers
-          const registrations = await navigator.serviceWorker.getRegistrations();
-          for (const registration of registrations) {
-            // Force update check
-            await registration.update();
-          }
-          
-          // Register the new service worker
           try {
-            const registration = await navigator.serviceWorker.register('/sw.js?v=3');
-            console.log('SW v3 registered:', registration);
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (const registration of registrations) {
+              const success = await registration.unregister();
+              console.log('SW unregistered:', success);
+            }
             
-            // Check for updates every 30 seconds
-            setInterval(() => registration.update(), 30000);
-            
-            // When new SW is found, activate immediately
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  console.log('New SW installed, activating...');
-                  newWorker.postMessage('skipWaiting');
-                }
-              });
-            });
-            
-            // Reload when new SW takes control
-            let refreshing = false;
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-              if (!refreshing) {
-                refreshing = true;
-                console.log('New SW active, reloading...');
-                window.location.reload();
-              }
-            });
-          } catch (error) {
-            console.error('SW registration failed:', error);
+            // Register the self-destructing SW to clean up old ones
+            const reg = await navigator.serviceWorker.register('/sw.js?v=destroy');
+            console.log('Cleanup SW registered');
+          } catch (e) {
+            console.log('SW cleanup error:', e);
           }
         }
       })();
