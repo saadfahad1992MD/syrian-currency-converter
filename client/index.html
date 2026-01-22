@@ -147,37 +147,27 @@
       src="%VITE_ANALYTICS_ENDPOINT%/umami"
       data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
     
-    <!-- Remove Service Worker and Clear Cache -->
+    <!-- Cleanup: Remove old Service Workers and Cache -->
     <script>
       (async function() {
-        // Step 1: Clear ALL caches immediately
+        // Clear ALL caches to fix white screen issue
         if ('caches' in window) {
           try {
             const cacheNames = await caches.keys();
             for (const name of cacheNames) {
               await caches.delete(name);
-              console.log('Deleted cache:', name);
             }
-          } catch (e) {
-            console.log('Cache clear error:', e);
-          }
+          } catch (e) {}
         }
         
-        // Step 2: Unregister ALL service workers
+        // Unregister ALL service workers permanently
         if ('serviceWorker' in navigator) {
           try {
             const registrations = await navigator.serviceWorker.getRegistrations();
             for (const registration of registrations) {
-              const success = await registration.unregister();
-              console.log('SW unregistered:', success);
+              await registration.unregister();
             }
-            
-            // Register the self-destructing SW to clean up old ones
-            const reg = await navigator.serviceWorker.register('/sw.js?v=destroy');
-            console.log('Cleanup SW registered');
-          } catch (e) {
-            console.log('SW cleanup error:', e);
-          }
+          } catch (e) {}
         }
       })();
     </script>
